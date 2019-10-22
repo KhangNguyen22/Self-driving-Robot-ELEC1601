@@ -130,7 +130,7 @@ void setup()
 }
  
 boolean onPath = false;
-int currentDest = 2;
+int currentDest = 0;
 void loop()
 {
     char recvChar;
@@ -140,30 +140,24 @@ void loop()
         if(blueToothSerial.available())   // Check if there's any data sent from the remote Bluetooth shield
         {
             recvChar = blueToothSerial.read();
-            if(recvChar == 'K'){
-              Serial.println("CONFIRM");
+            // check if idle or not !!! if not then take requests
+            if(recvChar == '0'){
+              Serial.println("Kitchen");
+              currentDest = 0;
+              // then set currentpath and set homestate to false
+              sendStatus();
             }
-            char num = recvChar;
-            blueToothSerial.print(recvChar);
-            if (!onPath) {
-              switch (num) {
-                case 0:
-                  Serial.println("kitchen");
-                  sendStatus();
-                  // Serial.pr
-                  break;
-                case 1:
-                  Serial.println("table1");
-                  sendStatus();
-                  break;
-                case 2:
-                  Serial.println("table2");
-                  sendStatus();
-                  break;
-                }
+            else if (recvChar == '1') {
+              Serial.println("Table1");
+              currentDest = 1;
+              // then set currentpath and set homestate to false
+              sendStatus();
             }
-            else {
-              //
+            else if (recvChar == '2') {
+              Serial.println("Table2");
+              currentDest = 2;
+              // then set currentpath and set homestate to false
+              sendStatus();
             }
           }
         
@@ -179,7 +173,7 @@ void loop()
         int lState = analogRead(leyePin);
         int rState = analogRead(reyePin);
         if(homeState == true){
-          leftTurn();
+          // do nothing, just receive communication
         }
         else if(lState < 40 && rState < 40){
           intersection();
@@ -195,8 +189,7 @@ void loop()
         }
     }
 }
-int destination() {
-}
+
 void sendStatus() {
   if (instruction == "S") {
     if (currentDest == 0) {
@@ -452,4 +445,3 @@ void continueOn(){
   servoRight.writeMicroseconds(rSpeed);
   delay(1500);
 }
-

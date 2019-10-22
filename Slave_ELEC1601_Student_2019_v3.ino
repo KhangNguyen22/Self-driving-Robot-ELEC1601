@@ -158,26 +158,15 @@ void loop()
 
         if(Serial.available())            // Check if there's any data sent from the local serial terminal. You can add the other applications here.
         {
-            char number  = Serial.read();
-            Serial.println(number);
-            blueToothSerial.println(number);
-            switch (number) 
-            {
-              case 0:
-                callRobot(0);
-              case 1:
-                callRobot(1);
-              case 2:
-                callRobot(2);
+            recvChar = Serial.read();
+            if (recvChar == '0' || recvChar == '1' || recvChar == '2') {
+              Serial.println(recvChar);
+              blueToothSerial.println(recvChar);
             }
         }
     }
 }
 
-
-void callRobot(int number) {
-  blueToothSerial.print(number);
-}
 
 void setupBlueToothConnection()
 {
