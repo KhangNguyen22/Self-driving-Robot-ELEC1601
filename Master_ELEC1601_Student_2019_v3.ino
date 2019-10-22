@@ -140,32 +140,36 @@ void loop()
         if(blueToothSerial.available())   // Check if there's any data sent from the remote Bluetooth shield
         {
             recvChar = blueToothSerial.read();
-            // check if idle or not !!! if not then take requests
-            if(recvChar == '0'){
-              Serial.println("Kitchen");
-              currentDest = 0;
-              // then set currentpath and set homestate to false
-              sendStatus();
-            }
-            else if (recvChar == '1') {
-              Serial.println("Table1");
-              currentDest = 1;
-              // then set currentpath and set homestate to false
-              sendStatus();
-            }
-            else if (recvChar == '2') {
-              Serial.println("Table2");
-              currentDest = 2;
-              // then set currentpath and set homestate to false
-              sendStatus();
+            if (homestate) {
+              if(recvChar == '0'){
+                Serial.println("Kitchen");
+                currentDest = 0;
+                // then set currentpath and set homestate to false
+                homestate = false;
+              }
+              else if (recvChar == '1') {
+                Serial.println("Table1");
+                currentDest = 1;
+                // then set currentpath and set homestate to false
+                homestate = false;
+              }
+              else if (recvChar == '2') {
+                Serial.println("Table2");
+                currentDest = 2;
+                // then set currentpath and set homestate to false
+                homestate = false;
+              }
             }
           }
+        sendStatus();
         
         if(Serial.available())            // Check if there's any data sent from the local serial terminal. You can add the other applications here.
         {
             recvChar  = Serial.read();
-            Serial.println(recvChar);
-            blueToothSerial.print(recvChar);
+            if (recvChar == 'a' || recvChar == 'b' || recvChar == 'c' || recvChar == 'A' || recvChar == 'B' || recvChar == 'C') {
+              Serial.println(recvChar);
+              blueToothSerial.print(recvChar);
+            }
         }
         /*
          * THIS IS THE MOTOR FUNCTION
@@ -173,7 +177,7 @@ void loop()
         int lState = analogRead(leyePin);
         int rState = analogRead(reyePin);
         if(homeState == true){
-          // do nothing, just receive communication
+          halt();
         }
         else if(lState < 40 && rState < 40){
           intersection();
@@ -191,7 +195,7 @@ void loop()
 }
 
 void sendStatus() {
-  if (instruction == "S") {
+  if (homestate) {
     if (currentDest == 0) {
       blueToothSerial.println('a');
     }
