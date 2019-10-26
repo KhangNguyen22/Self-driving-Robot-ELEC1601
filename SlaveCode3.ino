@@ -34,11 +34,6 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 //when a button is pressed 
 boolean isRobotDone = false;
 
-//use this for the "waiting" after a button press
-int period = 400; 
-unsigned long timeNow = 0;
-// ###
-
 #define RxD 7
 #define TxD 6
 #define ConnStatus A1
