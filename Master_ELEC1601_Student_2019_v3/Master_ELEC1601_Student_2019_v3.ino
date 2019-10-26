@@ -80,13 +80,13 @@ char table2[] = {'F','R','S'};
 char kitchen1[] = {'R','R','L','L','S'};
 char kitchen2[] = {'L','L','R','L','S'};
 
-int currentpath = 1;
-int currentpathlength;
+int currentPath;
 int iterator = 0;
+int currentDest;
 
 char instruction;
 
-bool homeState = true;
+boolean homeState = true;
 
 
 void setup()
@@ -132,8 +132,6 @@ void setup()
     pinMode(reyePin, INPUT);
 }
  
-boolean onPath = false;
-int currentDest = 0;
 void loop()
 {
     char recvChar;
@@ -143,24 +141,34 @@ void loop()
         if(blueToothSerial.available())   // Check if there's any data sent from the remote Bluetooth shield
         {
             recvChar = blueToothSerial.read();
-            if (homestate) {
-              if(recvChar == '0'){
-                Serial.println("Kitchen");
+            if (homeState) {
+              if(recvChar == '1'){
+                Serial.println("From Table 1 To Kitchen");
+                currentPath = 1;
                 currentDest = 0;
                 // then set currentpath and set homestate to false
-                homestate = false;
-              }
-              else if (recvChar == '1') {
-                Serial.println("Table1");
-                currentDest = 1;
-                // then set currentpath and set homestate to false
-                homestate = false;
+                homeState = false;
               }
               else if (recvChar == '2') {
-                Serial.println("Table2");
-                currentDest = 2;
+                Serial.println("From Table2 to Kitchen");
+                currentDest = 0;
+                currentPath = 2;
                 // then set currentpath and set homestate to false
-                homestate = false;
+                homeState = false;
+              }
+              else if (recvChar == '3') {
+                Serial.println("To Table 1");
+                currentDest = 1;
+                currentPath = 3;
+                // then set currentpath and set homestate to false
+                homeState = false;
+              }
+              else if (recvChar == '4') {
+                Serial.println("To Table 2");
+                currentDest = 2;
+                currentPath = 4;
+                // then set currentpath and set homestate to false
+                homeState = false;
               }
             }
           }
@@ -198,7 +206,7 @@ void loop()
 }
 
 void sendStatus() {
-  if (homestate) {
+  if (homeState) {
     if (currentDest == 0) {
       blueToothSerial.println('a');
     }
@@ -403,11 +411,23 @@ void halt(){
 // Detect if there is a line
 void intersection(){
   Serial.println("intersection");
-  switch(currentpath){
+  switch(currentPath){
     case 1:
+      instruction = kitchen1[iterator];
+      pathDecoder(instruction);
+      break;
+    case 2:
+      instruction = kitchen2[iterator];
+      pathDecoder(instruction);
+      break;
+    case 3:
       instruction = table1[iterator];
       pathDecoder(instruction);
-    break;
+      break;
+    case 4:
+      instruction = table2[iterator];
+      pathDecoder(instruction);
+      break;
   }
 }
 
@@ -415,20 +435,20 @@ void pathDecoder(char instruction){
   Serial.println(instruction);
   switch(instruction){
     case 'L':
-    leftTurn();
-    iterator++;
+      leftTurn();
+      iterator++;
       break;
     case 'R':
-    rightTurn();
-    iterator++;
+      rightTurn();
+      iterator++;
       break;
     case 'F':
-    continueOn();
-    iterator++;
+      continueOn();
+      iterator++;
       break;
     case 'S':
-    homeState = true;
-    iterator=0;
+      homeState = true;
+      iterator=0;
       break;
   }
 }
