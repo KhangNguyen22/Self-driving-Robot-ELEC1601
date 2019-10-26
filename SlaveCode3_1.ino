@@ -135,17 +135,17 @@ void loop() {
     float buttonFour = convert(analogRead(analogFour));
   
     if (isButtonPressed(buttonOne)) {
-          sendSignal('0');
+          sendSignal('1');
           //wait is in sendSignal() function  
         }
     else if (isButtonPressed(buttonTwo)) {
-          sendSignal('1');
-        } 
-    else if (isButtonPressed(buttonThree)) {
           sendSignal('2');
         } 
-    else if (isButtonPressed(buttonFour)) {
+    else if (isButtonPressed(buttonThree)) {
           sendSignal('3');
+        } 
+    else if (isButtonPressed(buttonFour)) {
+          sendSignal('4');
         }
   }
 }
