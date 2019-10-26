@@ -174,14 +174,14 @@ void loop()
           }
         sendStatus();
         
-        if(Serial.available())            // Check if there's any data sent from the local serial terminal. You can add the other applications here.
-        {
-            recvChar  = Serial.read();
-            if (recvChar == 'a' || recvChar == 'b' || recvChar == 'c' || recvChar == 'A' || recvChar == 'B' || recvChar == 'C') {
-              Serial.println(recvChar);
-              blueToothSerial.print(recvChar);
-            }
-        }
+//        if(Serial.available())            // Check if there's any data sent from the local serial terminal. You can add the other applications here.
+//        {
+//            recvChar  = Serial.read();
+//            if (recvChar == 'a' || recvChar == 'b' || recvChar == 'c' || recvChar == 'A' || recvChar == 'B' || recvChar == 'C') {
+//              Serial.println(recvChar);
+//              blueToothSerial.print(recvChar);
+//            }
+//        }
         /*
          * THIS IS THE MOTOR FUNCTION
          */
