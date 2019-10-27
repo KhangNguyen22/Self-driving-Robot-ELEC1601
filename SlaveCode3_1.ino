@@ -32,7 +32,7 @@ int analogFour = A5;
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 //use this for the "waiting" after a button press
-int period = 400; 
+int period = 1000; 
 unsigned long timeNow = 0;
 // ###
 
@@ -157,7 +157,7 @@ float convert(int analogNum) {
 
 // ### THIS FUNCTION NEEDS TESTING ASAP! ####
 boolean isButtonPressed(float convertedVoltage) {
-  if(convertedVoltage == 5.00) {  //this i am unsure of, needs to be tested
+  if(convertedVoltage >= 4.95) {  //this i am unsure of, needs to be tested
     return true;   
   }
   return false;
