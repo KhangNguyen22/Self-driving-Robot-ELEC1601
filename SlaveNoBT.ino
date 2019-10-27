@@ -31,7 +31,7 @@ void loop() {
     float buttonFour = convert(analogRead(analogFour));
 
         if (isButtonPressed(buttonOne)) {
-          Serial.println(0);
+          Serial.println("buttonOne Is Pressed");
         }
         else if (isButtonPressed(buttonTwo)) {
           Serial.println(1);
@@ -51,7 +51,7 @@ float convert(int analogNum) {
 
 // ### THIS FUNCTION NEEDS TESTING ASAP! ####
 boolean isButtonPressed(float convertedVoltage) {
-  if(convertedVoltage == 5.00) {  //this i am unsure of, needs to be tested
+  if(convertedVoltage >= 4.95) {  //this i am unsure of, needs to be tested
     return true;   
   }
   return false;
