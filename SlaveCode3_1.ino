@@ -129,11 +129,11 @@ void loop() {
       }
     }  
   
-    float buttonOne = convert(analogRead(analogOne));
-    float buttonTwo = convert(analogRead(analogTwo));
-    float buttonThree = convert(analogRead(analogThree));
-    float buttonFour = convert(analogRead(analogFour));
-  
+    int buttonOne = analogRead(analogOne);
+    int buttonTwo = analogRead(analogTwo);
+    int buttonThree = analogRead(analogThree);
+    int buttonFour = analogRead(analogFour);
+    
     if (isButtonPressed(buttonOne)) {
           sendSignal('1');
           //wait is in sendSignal() function  
@@ -150,14 +150,11 @@ void loop() {
   }
 }
 
-float convert(int analogNum) {
-  float voltage = analogNum * (5.0/1023.0); //analog -> digital
-  return voltage;
-}
+
 
 // ### THIS FUNCTION NEEDS TESTING ASAP! ####
 boolean isButtonPressed(float convertedVoltage) {
-  if(convertedVoltage >= 4.95) {  //this i am unsure of, needs to be tested
+  if(convertedVoltage >= 500) {  //this i am unsure of, needs to be tested
     return true;   
   }
   return false;
