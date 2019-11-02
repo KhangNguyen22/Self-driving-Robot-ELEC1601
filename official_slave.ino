@@ -20,21 +20,27 @@
 //-----------------------------------------------------------------------------------------------------------//
 
 #include <SoftwareSerial.h>   //Software Serial Port
-#include <LiquidCrystal.h>
+#include <LiquidCrystal.h>   //Include LCD library
+/*
+  SET CONTRAST FOR LCD
+*/
 int contrast = 20;
 int contrastPin = 8;
-//One for each button
+/*
+  ASSIGN EACH BUTTON ITS OWN ANALOG PIN
+*/
 int analogOne = A2;
 int analogTwo = A3;
 int analogThree = A4;
 int analogFour = A5;
-// ###                
+/*
+  SETUP LCD
+*/
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-//use this for the "waiting" after a button press
-int period = 1000; 
-unsigned long timeNow = 0;
-// ###
+int period = 1000;                  //setup variables for wait() function
+unsigned long timeNow = 0;          //called after a button press to ensure multiple signals aren't set from one press
+
 
 #define RxD 7
 #define TxD 6
@@ -89,11 +95,10 @@ void setup() {
     Serial.flush();
     blueToothSerial.flush();
   }  
-  
-  // ## OUR OWN SETUP ##
+ 
   analogWrite(contrastPin, contrast);
   lcd.begin(16, 2);
-  pinMode(analogOne, INPUT);
+  pinMode(analogOne, INPUT);            //analogPin will receive 5V for it's respective button when pressed
   pinMode(analogTwo, INPUT);
   pinMode(analogThree, INPUT);
   pinMode(analogFour, INPUT);
@@ -110,14 +115,14 @@ void loop() {
     {
       recvChar = blueToothSerial.read();
       if (recvChar == 'a') {
-        show("IDLE AT", "KITCHEN");
-      }
-      else if (recvChar == 'b') {
-        show("IDLE AT", "TABLE 1");   
-            }
-      else if (recvChar == 'c') {
-        show("IDLE AT", "TABLE 2");               
-      }
+        show("IDLE AT", "KITCHEN");         // Different status to print on LCD depending on signal received
+      }                                     // Signal will be received when:
+      else if (recvChar == 'b') {           //    1. A button is pressed
+        show("IDLE AT", "TABLE 1");         //      -   Sends bluetooth signal to robot to move to a specific location             
+            }                               //      -   Recieve bluetooth signal back to show one of the lower 3 status (uppercase)
+      else if (recvChar == 'c') {           //    2. Robot reaches destination
+        show("IDLE AT", "TABLE 2");         //      -   Robot sends signal back       
+      }                                     //      -   Recieve bluetooth signal to show one of the upper 3 status depending where it was moving to, determined by button press before (lowercase)
       else if (recvChar == 'A') {
         show("MOVING TO", "KITCHEN");      
       }
@@ -134,9 +139,15 @@ void loop() {
     int buttonThree = analogRead(analogThree);
     int buttonFour = analogRead(analogFour);
     
+    /*
+      WHICH BUTTON SENDS WHICH SIGNAL
+        1: Move to kitchen from table 1
+        2: Move to kitchen from table 2
+        3: Move to table 1 from kitchen
+        4: Move to table 2 from kitchen
+    */
     if (isButtonPressed(buttonOne)) {
           sendSignal('1');
-          //wait is in sendSignal() function  
         }
     else if (isButtonPressed(buttonTwo)) {
           sendSignal('2');
@@ -147,28 +158,25 @@ void loop() {
     else if (isButtonPressed(buttonFour)) {
           sendSignal('4');
         }
-  }
+    }
 }
 
-
-
-// ### THIS FUNCTION NEEDS TESTING ASAP! ####
 boolean isButtonPressed(float convertedVoltage) {
-  if(convertedVoltage >= 500) {  //this i am unsure of, needs to be tested
-    return true;   
-  }
-  return false;
+  if(convertedVoltage >= 500) {        
+    return true;                        // If button isn't pressed the value is 0
+  }                                     // If button is pressed the value is ~1000
+  return false;                         // Flexibility to what convertedVoltage can be, 500 is a nice mid cap
 }
 
 void sendSignal(char command) {
-  blueToothSerial.println(command);
-  wait();
+  blueToothSerial.println(command);     // Send the signal 
+  wait();                               // Call wait() function to prevent multiple signals being pressed
 }
 
 void show(String lineOne, String lineTwo) {
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print(lineOne);
+  lcd.clear();              // Clear the previous message displayed on the LCD
+  lcd.setCursor(0,0);       // Cursor begins at first line, first index
+  lcd.print(lineOne);       // Displays given text
   lcd.setCursor(0,1);
   lcd.print(lineTwo);
 }
@@ -176,7 +184,7 @@ void show(String lineOne, String lineTwo) {
 void wait() {
   timeNow = millis();
   while(millis() < timeNow + period) {
-    //do nothing
+    //do nothing i.e. do not send a signal if one was already sent for a second
   }
 }
 
