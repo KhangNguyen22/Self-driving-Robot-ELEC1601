@@ -1,27 +1,3 @@
-//-----------------------------------------------------------------------------------------------------------//
-//                                                                                                           //
-//  Master_ELEC1601_Student_2019_v3                                                                          //
-//  The Instructor version of this code is identical to this version EXCEPT it also sets PIN codes           //
-//  20191008 Peter Jones                                                                                     //
-//                                                                                                           //
-//  Bi-directional passing of serial inputs via Bluetooth                                                    //
-//  Note: the void loop() contents differ from "capitalise and return" code                                  //
-//                                                                                                           //
-//  This version auto-searches for slave MAC using slave name and attempts connection repeatedly             //
-//  (as implemented in original BluetoothShield demo code "Master.pde" by Steve Chang / Seeed Tech. 2011)    //
-//                                                                                                           //
-//  This version was initially based on the 2011 Steve Chang code but has been substantially revised         //
-//  and heavily documented throughout.                                                                       //
-//                                                                                                           //
-//  20190927 Ross Hutton                                                                                     //
-//  Identified that opening the Arduino IDE Serial Monitor asserts a DTR signal which resets the Arduino,    //
-//  causing it to re-execute the full connection setup routine. If this reset happens on the Master system,  //
-//  it should subsequently re-connect to the Slave but appears to hang while searching for the slave         //
-//  address. As the Bluetooth shield itself is not reset by opening the Serial Monitor, code has been added  //
-//  to check if the Bluetooth connection remains established and, if so, the setup process is bypassed.      //
-//                                                                                                           //
-//-----------------------------------------------------------------------------------------------------------//
-
 #include <SoftwareSerial.h>   // Software Serial Port
 #include <Servo.h>                      // Include servo library
 
