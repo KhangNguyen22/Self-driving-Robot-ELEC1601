@@ -1,3 +1,25 @@
+/*
+GROUP T15-13
+Master code
+OVERVIEW:
+  
+  
+ASSUMPTIONS:
+  1. It will not receive a signal while moving to a destination.
+  2. It will move to and from its respective locations i.e. it won't
+  be told to move to table 2 from table 1, it must move from table 1
+  to kitchen first before moving to table 2.
+  
+CIRCUIT:
+  
+      
+FUNCTIONS:
+     
+Version official
+Date 03/11/19
+Authors: GROUP T15-13   
+*/
+
 #include <SoftwareSerial.h>   // Software Serial Port
 #include <Servo.h>            // Include servo library
 
