@@ -558,7 +558,7 @@ void pathDecoder(char instruction){
 A POSSIBLE QUESTION YOU MIGHT HAVE:
   Why do I need the functions below when I already have left(), right() and forward()?
 ANSWER:
-  When dealing with an intersection, we want the robot to ignore the values retrieved 
+  When dealing with an intersection, we want the robot to ignore the values retreived 
   from the photo resistors. We want to ensure when it hits an intersection, it doesn't
   accidentally detect the intersection again which would completely ruin the pathing.
 */
