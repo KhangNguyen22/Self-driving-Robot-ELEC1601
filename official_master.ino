@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>   // Software Serial Port
-#include <Servo.h>                      // Include servo library
+#include <Servo.h>            // Include servo library
 
 #define RxD 7
 #define TxD 6
