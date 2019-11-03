@@ -2,7 +2,15 @@
 GROUP T15-13
 Master code
 OVERVIEW:
-  
+  At any other given time, the robot is waiting to receive a signal
+  (initially it will be at kitchen). When the robot is in its "idle" 
+  state, it remains halted. When it receives a signal, depending on
+  the signal received, it will choose its destination and path, and
+  begin to move. When it reaches an intersection, it will perform 
+  certain moves determined by the path it took. It can go left, right,
+  forward, or halt (indicates it has reached its destination). Once it
+  reaches its destination, it will return back to its idle state, 
+  waiting for the next signal.
   
 ASSUMPTIONS:
   1. It will not receive a signal while moving to a destination.
@@ -11,10 +19,48 @@ ASSUMPTIONS:
   to kitchen first before moving to table 2.
   
 CIRCUIT:
-  
+  ANALOG PINS:
+    Eyes:
+    Uses pins 2-3.
+    Left photoresistor: 2
+    Right photoresistor: 3
+    Used for detecting when it's on the black track or not.
+    These are set to INPUT.
+  DIGITAL PINS:
+    Servos:
+    Uses pins 12-13.
+    Left servo: 12
+    Right servo: 13
+    Attack servos to allow Boe-Bot to move.
       
 FUNCTIONS:
-     
+  void sendStatus()
+    Each time the robot recieves a signal or is currently halting, it
+    will send a signal to the slave. This signal will be different 
+    depending on where it's moving or where it has stopped. 
+  void halt()
+    Detach both servos to halt the Boe-Bot.
+  void backward()
+    Make the Boe-Bot go backwards.
+  void forward()
+    Make the Boe-Bot go forward.
+  void left()
+    Make the Boe-Bot go left.
+  void right()
+    Make the Boe-Bot go right.
+  void leftTurn()
+    Make the Boe-Bot turn left then stop for 1.5 seconds.
+  void rightTurn()
+    Make the Boe-Bot turn right then stop for 1.5 seconds.
+  void continueOn()
+    Make the Boe-Bot go forward then stop for 1.5 seconds.
+  void intersection()
+    Sends the next instruction of the path array to the path decoder
+    when it detects an intserction, where it will determine what to do.
+  void pathDecoder()
+    Executes the next instruction of the path array e.g. turn left, continue 
+    on, etc. and iterates the iterator.
+   
 Version official
 Date 03/11/19
 Authors: GROUP T15-13   
@@ -63,12 +109,18 @@ const int reyePin = A2;
 const int leyePin = A3;
 /* 
 DEFINE PATHS
+  PATH DEFINTITIONS:
+    F: Move forward
+    L: Turn left
+    R: Turn right
+    S: Halt 
 */
 char table1[] = {'F','L','S'};
 char table2[] = {'F','R','S'};
 char kitchen1[] = {'R','R','L','L','S'};
 char kitchen2[] = {'L','L','R','L','S'};
 
+//variables used for manipulating the paths
 int currentPath;
 int iterator = 0;
 int currentDest = 0;
@@ -76,13 +128,19 @@ int currentDest = 0;
 char instruction;
 unsigned long currentMillis;
 
+//true when it's in "idle state", false when it's moving
 boolean homeState = true;
 
-
+/*
+void setup()
+  Setup what's needed for the bluetooth component
+  Setup servos
+  Setup the pins connected  to the photoresistors to INPUT
+*/
 void setup()
 {
     Serial.begin(9600);
-    blueToothSerial.begin(38400);                    // Set Bluetooth module to default baud rate 38400
+    blueToothSerial.begin(38400);   // Set Bluetooth module to default baud rate 38400
         
     pinMode(RxD, INPUT);
     pinMode(TxD, OUTPUT);
