@@ -47,7 +47,6 @@ Date 03/11/19
 Authors: GROUP T15-13   
 */
 
-
 #include <SoftwareSerial.h>   
 #include <LiquidCrystal.h>   
 /*
@@ -77,29 +76,26 @@ unsigned long timeNow = 0;          //called after a button press to ensure mult
 
 #define DEBUG_ENABLED  1
 
-// ##################################################################################
-// ### EDIT THE LINES BELOW TO MATCH YOUR SHIELD NUMBER AND CONNECTION PIN OPTION ###
-// ##################################################################################
-
 int shieldPairNumber = 13;
 
-// CAUTION: If ConnStatusSupported = true you MUST NOT use pin A1 otherwise "random" reboots will occur
-// CAUTION: If ConnStatusSupported = true you MUST set the PIO[1] switch to A1 (not NC)
-
 boolean ConnStatusSupported = true;   // Set to "true" when digital connection status is available on Arduino pin
-
-// #######################################################
 
 // The following two string variable are used to simplify adaptation of code to different shield pairs
 
 String slaveNameCmd = "\r\n+STNA=Slave";   // This is concatenated with shieldPairNumber later
 
 SoftwareSerial blueToothSerial(RxD,TxD);
-
+/*
+void setup()
+  Set up what's needed for the bluetooth component
+  Set the analog pins for the buttons to INPUT
+  Begin the LCD
+  Write the contrast to the contrastPin for the LCD
+*/
 void setup() {
   
   Serial.begin(9600);
-  blueToothSerial.begin(38400);                    // Set Bluetooth module to default baud rate 38400
+  blueToothSerial.begin(38400);  // Set Bluetooth module to default baud rate 38400
     
   pinMode(RxD, INPUT);
   pinMode(TxD, OUTPUT);
@@ -127,7 +123,8 @@ void setup() {
  
   analogWrite(contrastPin, contrast);
   lcd.begin(16, 2);
-  pinMode(analogOne, INPUT);            //analogPin will receive 5V for it's respective button when pressed
+  //analogPins will receive 5V for it's respective button when pressed
+  pinMode(analogOne, INPUT);            
   pinMode(analogTwo, INPUT);
   pinMode(analogThree, INPUT);
   pinMode(analogFour, INPUT);
@@ -162,19 +159,14 @@ void loop() {
         show("MOVING TO", "TABLE 2");    
       }
     }  
-  
+    
+    //read the analog pins
     int buttonOne = analogRead(analogOne);
     int buttonTwo = analogRead(analogTwo);
     int buttonThree = analogRead(analogThree);
     int buttonFour = analogRead(analogFour);
     
-    /*
-      WHICH BUTTON SENDS WHICH SIGNAL
-        1: Move to kitchen from table 1
-        2: Move to kitchen from table 2
-        3: Move to table 1 from kitchen
-        4: Move to table 2 from kitchen
-    */
+    //check if any button was pressed
     if (isButtonPressed(buttonOne)) {
           sendSignal('1');
         }
@@ -189,27 +181,59 @@ void loop() {
         }
     }
 }
-
+/*
+boolean isButtonPressed(float convertedVoltage)
+  Function checks if button was pressed. If a button
+  was pressed, its respective analog pin will
+  receive 5V. If this occurs, return true, else false
+*/
 boolean isButtonPressed(float convertedVoltage) {
   if(convertedVoltage >= 500) {        
-    return true;                        // If button isn't pressed the value is 0
-  }                                     // If button is pressed the value is ~1000
-  return false;                         // Flexibility to what convertedVoltage can be, 500 is a nice mid cap
+    return true;                        // If button isn't pressed, convertedVoltage is 0
+  }                                     // If button is pressed, convertedVoltage is ~1000
+  return false;                         
 }
 
+/*
+void sendSignal(char command)
+  Sends the command to the bluetooth serial which is 
+  to read by the master.
+  WHICH BUTTON SENDS WHICH SIGNAL
+    1: Move to kitchen from table 1
+    2: Move to kitchen from table 2
+    3: Move to table 1 from kitchen
+    4: Move to table 2 from kitchen
+*/
 void sendSignal(char command) {
   blueToothSerial.println(command);     // Send the signal 
-  wait();                               // Call wait() function to prevent multiple signals being pressed
+  wait();                               // Call wait() function
 }
 
+/*
+void show(String lineOne, String lineTwo)
+  Displays message on LCD screen.
+  The first line displays lineOne.
+  Similarly, second line for lineTwo.
+  Initially clears message so it does not
+  overlap with the previous message.
+*/
 void show(String lineOne, String lineTwo) {
-  lcd.clear();              // Clear the previous message displayed on the LCD
+  lcd.clear();              
   lcd.setCursor(0,0);       // Cursor begins at first line, first index
   lcd.print(lineOne);       // Displays given text
   lcd.setCursor(0,1);
   lcd.print(lineTwo);
 }
 
+/*
+void wait()
+  PURPOSE: Called when a button is pressed to ensure
+  only one signal is sent on a button pressed. 
+  It makes the program wait until a second has passed 
+  (period is 1000 milliseconds, and will remain in loop
+  until current time beat the time when it entered loop
+  + a second).
+*/
 void wait() {
   timeNow = millis();
   while(millis() < timeNow + period) {
