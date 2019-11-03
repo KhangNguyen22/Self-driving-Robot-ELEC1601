@@ -40,8 +40,6 @@ FUNCTIONS:
     depending on where it's moving or where it has stopped. 
   void halt()
     Detach both servos to halt the Boe-Bot.
-  void backward()
-    Make the Boe-Bot go backwards.
   void forward()
     Make the Boe-Bot go forward.
   void left()
@@ -246,9 +244,9 @@ void loop()
          */
         int lState = analogRead(leyePin);
         int rState = analogRead(reyePin);
-        servoLeft.attach(12);             // has to be attached each time as the halt() function detaches the servos
+        servoLeft.attach(12);                 // has to be attached each time as the halt() function detaches the servos
         servoRight.attach(13);
-        if(homeState == true){            // halt if it's in "idle" state
+        if(homeState == true){                // halt if it's in "idle" state
           halt();
         }
         else if(lState < 40 && rState < 40){  // both photoresistors have detected black tape, thus it is an intersection
@@ -297,9 +295,9 @@ void sendStatus() {
       blueToothSerial.println('c');
     }
   }
-  else {                              // If it's currently in "moving" state (moving to destination, homeState false),
-    if (currentDest == 0) {           // it will send a signal which will make the slave display an "MOVING TO" message,
-      blueToothSerial.println('A');   // following the destination on the LCD
+  else {                                // If it's currently in "moving" state (moving to destination, homeState false),
+    if (currentDest == 0) {             // it will send a signal which will make the slave display a "MOVING TO" message,
+      blueToothSerial.println('A');     // following the destination on the LCD
     }
     else if (currentDest == 1) {
       blueToothSerial.println('B');
@@ -454,52 +452,57 @@ void makeBlueToothConnection()
 }
 
 /*
- ROBOT FUNCTIONS
- */
- // Move Arduino forward
+void forward()
+  Move the robot forward.
+  Set the speed of left servo to lSpeed (counterclockwise)
+  Set the speed of right servo to rSpeed (clockwise)
+*/
 void forward(){
   servoLeft.writeMicroseconds(lSpeed);
   servoRight.writeMicroseconds(rSpeed); 
   }
-
-// Move Arduino backward
-void backward(){
-  servoLeft.writeMicroseconds(1500);
-  servoRight.writeMicroseconds(1500); 
-  }
-
- // Move Arduino left
+/*
+void left()
+  Move the robot left.
+  Set the speed of left servo to 1500 (stopped)
+  Set the speed of right servo to rSpeed (clockwise)
+*/
 void left(){
   servoLeft.writeMicroseconds(1500); 
   servoRight.writeMicroseconds(rSpeed);
   }
-  
-// Move Arduino right
+/*
+void right()
+  Move the robot right.
+  Set the speed of left servo to lSpeed (counterclockwise)
+  Set the speed of right servo to 1500 (stopped)
+*/
 void right(){
   servoLeft.writeMicroseconds(lSpeed); 
-  servoRight.writeMicroseconds(1500);
-  
+  servoRight.writeMicroseconds(1500); 
   }
-
-// Error, lights up red LED
-void error(){
-
-  }
-
-//Halt function
+/*
+void halt()
+  Stop the robot.
+  Detatch both servos.
+*/
 void halt(){
   servoLeft.detach();
   servoRight.detach();
 }
-
-// Detect if there is a line
+/*
+void intersection()
+  Called when an intersection is hit (both photoresistors detect the black tape).
+  Path array is chosen dependent on the current destination (chosen by signal sent from slave)
+  Instruction is chosen from the path array and sent to another function to determine what to do.
+*/
 void intersection(){
   Serial.println("intersection");
-  switch(currentPath){
+  switch(currentPath){            // There are four path arrays. The signal sent from slave determines which one to use
     case 1:
-      instruction = kitchen1[iterator];
-      pathDecoder(instruction);
-      break;
+      instruction = kitchen1[iterator];  // For this example, this sets the instruction to the next instruction of getting from
+      pathDecoder(instruction);          // table 1 to the kitchen.
+      break;                             // The instruction is sent to pathDecoder() to determine what to do.
     case 2:
       instruction = kitchen2[iterator];
       pathDecoder(instruction);
@@ -514,13 +517,28 @@ void intersection(){
       break;
   }
 }
-
+/*
+void pathDecoder(char instruction)
+    Called in the intserction() function to determine what the robot should do.
+    It will execute the following instruction as defined in the switch case e.g. 'L'
+    does a left turn.
+    A POSSIBLE QUESTION YOU MIGHT HAVE:
+      What's the point of 'F' when each intersection it seems to turn? And how does
+      it know to do a specific instruction when it already stops at an intersection 
+      (might lead to error)?
+    ANSWER:
+      When the robot is at the kitchen, and needs to move to a table, 'F' will be
+      the next instruction, so it gets off the intersection, stops for 1.5 seconds 
+      then continues to move forward. Similarly, when it reaches a table, the first
+      instruction will be a turn ('R' in both cases) when it moves back to the
+      kitchen.
+*/
 void pathDecoder(char instruction){
   Serial.println(instruction);
-  switch(instruction){
-    case 'L':
-      leftTurn();
-      iterator++;
+  switch(instruction){  // execute instruction dependent on what it is
+    case 'L':           // example is 'L'
+      leftTurn();       // perform a left turn
+      iterator++;       // iterate iterator so next instruction is the next character in the path array
       break;
     case 'R':
       rightTurn();
@@ -531,26 +549,46 @@ void pathDecoder(char instruction){
       iterator++;
       break;
     case 'S':
-      homeState = true;
-      iterator=0;
+      homeState = true; // if it stops, then it has reached the destination (homeState true)
+      iterator=0; // set back the iterator, as the next instruction will be in a new path array
       break;
   }
 }
+/*
+A POSSIBLE QUESTION YOU MIGHT HAVE:
+  Why do I need the functions below when I already have left(), right() and forward()?
+ANSWER:
+  When dealing with an intersection, we want the robot to ignore the values retrieved 
+  from the photo resistors. We want to ensure when it hits an intersection, it doesn't
+  accidentally detect the intersection again which would completely ruin the pathing.
+*/
 
+/*
+void leftTurn()
+  Same principles as left(), but is followed by a delay of 1.5 seconds.
+  This ensures the intersection is not detected again, and can continue
+  moving forward after this event-driven case.
+*/
 void leftTurn(){
   servoLeft.writeMicroseconds(1500);
   servoRight.writeMicroseconds(rSpeed);
   delay(1500);
 }
-
-
+/*
+void righttTurn()
+  Same principles as right(), with the same principles why a delay is
+  followed in the leftTurn() comment.
+*/
 void rightTurn(){
   servoLeft.writeMicroseconds(lSpeed);
   servoRight.writeMicroseconds(1500);
   delay(1500);
 }
-
-
+/*
+void continueOn()
+  Same principles as forward(), with the same principles why a delay is
+  followed in the leftTurn() comment.
+*/
 void continueOn(){
   servoLeft.writeMicroseconds(lSpeed);
   servoRight.writeMicroseconds(rSpeed);
