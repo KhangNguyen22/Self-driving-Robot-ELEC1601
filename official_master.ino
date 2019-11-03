@@ -179,7 +179,25 @@ void setup()
     pinMode(leyePin, INPUT);
     pinMode(reyePin, INPUT);
 }
- 
+/*
+void loop()
+  Constantly checking if a bluetooth signal is received from slave
+    - If a signal is received, set the destination and path and
+      send a signal back to master to display where it's going
+    - Make homeState false, so it will begin to move (stays still
+      when it is true).
+  When homeState is false:
+    - It will begin to move and follow the black tape until it hits
+      an instersection.
+      When it hits an intersection:
+        - It will execute the next instruction in the path array
+          defined by the signal it received.
+        - This determines where it goes e.g. right turn, stop, etc.
+      Once it stops (last instruction in each path array), it returns
+      back to its idle state, that is, homeState is true (so now it 
+      will continue halting) and will continue to send a signal where
+      it is to the slave.
+*/
 void loop()
 {
     char recvChar;
