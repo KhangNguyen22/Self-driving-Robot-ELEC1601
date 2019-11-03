@@ -47,8 +47,8 @@ Date 03/11/19
 Authors: GROUP T15-13   
 */
 
-#include <SoftwareSerial.h>   
-#include <LiquidCrystal.h>   
+#include <SoftwareSerial.h>     // Software Serial Port
+#include <LiquidCrystal.h>      // Include LCD library
 /*
   SET CONTRAST FOR LCD
 */
