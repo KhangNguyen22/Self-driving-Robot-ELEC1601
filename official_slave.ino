@@ -129,7 +129,15 @@ void setup() {
   pinMode(analogFour, INPUT);
   
 }
-
+/*
+void loop()
+  Constantly checking if a bluetooth signal is received from master.
+    -  If a signal is receieved, show the corresponding message on
+       the LCD
+  Constantly checking if a button has been pressed
+    -  If a button was pressed, send a bluetooth signal to the 
+       master (signal unique to which button was pressed)
+*/
 void loop() {
   
   char recvChar;
