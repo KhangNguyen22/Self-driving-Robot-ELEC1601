@@ -69,7 +69,6 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 int period = 1000;                  //setup variables for wait() function
 unsigned long timeNow = 0;          //called after a button press to ensure multiple signals aren't set from one press
 
-
 #define RxD 7
 #define TxD 6
 #define ConnStatus A1
