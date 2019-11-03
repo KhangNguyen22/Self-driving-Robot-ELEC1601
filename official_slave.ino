@@ -1,5 +1,55 @@
-#include <SoftwareSerial.h>   //Software Serial Port
-#include <LiquidCrystal.h>   //Include LCD library
+/*
+GROUP T15-13
+Slave code
+OVERVIEW:
+  The circuit consists of an LCD and 4 buttons. Each button is 
+  connected to its own analog pin, which is constantly reading 
+  for 5V (when the button is pressed). If the reading of an 
+  analog pin does reach this threshold, it sends a bluetooth 
+  signal (it's different depending on which button was pressed). 
+  The program then "waits", to ensure only one signal is sent 
+  from the button pressed.
+  ---
+  The master will also send a signal back when:
+  1. It recieves a signal
+  2. It has finished moving to its destination
+  Depending on the signal receieved, the LCD will display a 
+  different message.
+  
+ASSUMPTIONS:
+  1. No simultaneous button pressing.
+  2. A button won't be pressed until the the master has finished
+  running the code for the last signal sent.
+  
+CIRCUIT:
+  ANALOG PINS:
+    Used 2 - 5.
+    Each assigned to their own button.
+  DIGITAL PINS:
+    Contrast pin:
+      Determines contrast of LCD.
+    Data bus:
+      Handles data for LCD.
+      
+FUNCTIONS:
+  boolean isButtonPressed(float convertedVoltage)
+    Determines if button was pressed (if the respective pin reads
+    a certain threshold). If it does, return true, else return false.
+  void sendSignal(char command)
+    Send "command" to the bluetooth serial. Then it calls the wait()
+    function.
+  void wait()
+    Makes program wait for a second. This is to ensure when a button
+    is pressed, it does not send more than one signal.
+    
+Version official
+Date 03/11/19
+Authors: GROUP T15-13   
+*/
+
+
+#include <SoftwareSerial.h>   
+#include <LiquidCrystal.h>   
 /*
   SET CONTRAST FOR LCD
 */
