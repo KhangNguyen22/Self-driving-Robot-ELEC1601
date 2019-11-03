@@ -205,10 +205,10 @@ void loop()
 
     while(1)
     {
-        if(blueToothSerial.available())   // Check if there's any data sent from the remote Bluetooth shield
+        if(blueToothSerial.available())         // Check if there's any data sent from the remote Bluetooth shield
         {
             recvChar = blueToothSerial.read();
-            if (homeState) {            // in each case, the currentPath is set and homeState is set to false 
+            if (homeState) {                    // in each case, the currentPath is set and homeState is set to false 
               if(recvChar == '1'){
                 Serial.println("From Table 1 To Kitchen");
                 currentPath = 1;
@@ -254,28 +254,41 @@ void loop()
         else if(lState < 40 && rState < 40){  // both photoresistors have detected black tape, thus it is an intersection
           intersection();
         }
-        else if (lState < 40){
+        else if (lState < 40){                // the left photoresistor has detected black tape, move left to stay on track
           left();
         }
-        else if (rState < 40){
+        else if (rState < 40){                // the right photoresistor has detected black tape, move right to stay on track
           right();
         }
         else{
-          forward();
-        }
+          forward();                          // neither photoresistor has detected black tape, meaning its on track
+        }                                     // keep moving forward                            
     }
 }
+/*
+void wait()
+  PURPOSE: Called when a signal is sent to ensure
+  only one signal is sent. It makes the program wait 
+  until a tenth of a second has passed (will remain 
+  in loop until current time beat the time when it 
+  entered loop + 100 milliseconds).
+*/
 void wait() {
    currentMillis = millis();
    while (millis() < currentMillis + 100) {
-    
+      // do nothing i.e. ensure no signal sent after a signal was just sent
    }
 }
-
+/*
+void sendStatus()
+  Send a bluetooth signal to the slave dependent on it's destination and whether
+  if homeState is true (destination reached) or homeState is false (moving to 
+  destination).
+*/
 void sendStatus() {
-  if (homeState) {
-    if (currentDest == 0) {
-      blueToothSerial.println('a');
+  if (homeState) {                     // If it's currently in "idle" state (destination reached, homeState true),
+    if (currentDest == 0) {            // it will send a signal which will make the slave display an "IDLE" message,
+      blueToothSerial.println('a');    // following the destination on the LCD
     }
     else if (currentDest == 1) {
       blueToothSerial.println('b');
@@ -284,9 +297,9 @@ void sendStatus() {
       blueToothSerial.println('c');
     }
   }
-  else {
-    if (currentDest == 0) {
-      blueToothSerial.println('A');
+  else {                              // If it's currently in "moving" state (moving to destination, homeState false),
+    if (currentDest == 0) {           // it will send a signal which will make the slave display an "MOVING TO" message,
+      blueToothSerial.println('A');   // following the destination on the LCD
     }
     else if (currentDest == 1) {
       blueToothSerial.println('B');
@@ -295,7 +308,7 @@ void sendStatus() {
       blueToothSerial.println('C');
     }
   }
-  wait();
+  wait(); //wait() called to ensure this is not sent more than once.
 }
 void setupBlueToothConnection()
 {
