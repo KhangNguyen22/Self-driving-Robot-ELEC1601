@@ -7,18 +7,9 @@
                               // See also ConnStatusSupported boolean below
 #define DEBUG_ENABLED  1
 
-// ##################################################################################
-// ### EDIT THE LINES BELOW TO MATCH YOUR SHIELD NUMBER AND CONNECTION PIN OPTION ###
-// ##################################################################################
-
 int shieldPairNumber = 13;
 
-// CAUTION: If ConnStatusSupported = true you MUST NOT use pin A1 otherwise "random" reboots will occur
-// CAUTION: If ConnStatusSupported = true you MUST set the PIO[1] switch to A1 (not NC)
-
 boolean ConnStatusSupported = true;   // Set to "true" when digital connection status is available on Arduino pin
-
-// #######################################################
 
 // The following four string variable are used to simplify adaptation of code to different shield pairs
 
