@@ -1,24 +1,3 @@
-//-----------------------------------------------------------------------------------------------------------//
-//                                                                                                           //
-//  Slave_ELEC1601_Student_2019_v3                                                                           //
-//  The Instructor version of this code is identical to this version EXCEPT it also sets PIN codes           //
-//  20191008 Peter Jones                                                                                     //
-//                                                                                                           //
-//  Bi-directional passing of serial inputs via Bluetooth                                                    //
-//  Note: the void loop() contents differ from "capitalise and return" code                                  //
-//                                                                                                           //
-//  This version was initially based on the 2011 Steve Chang code but has been substantially revised         //
-//  and heavily documented throughout.                                                                       //
-//                                                                                                           //
-//  20190927 Ross Hutton                                                                                     //
-//  Identified that opening the Arduino IDE Serial Monitor asserts a DTR signal which resets the Arduino,    //
-//  causing it to re-execute the full connection setup routine. If this reset happens on the Slave system,   //
-//  re-running the setup routine appears to drop the connection. The Master is unaware of this loss and      //
-//  makes no attempt to re-connect. Code has been added to check if the Bluetooth connection remains         //
-//  established and, if so, the setup process is bypassed.                                                   //
-//                                                                                                           //
-//-----------------------------------------------------------------------------------------------------------//
-
 #include <SoftwareSerial.h>   //Software Serial Port
 #include <LiquidCrystal.h>   //Include LCD library
 /*
