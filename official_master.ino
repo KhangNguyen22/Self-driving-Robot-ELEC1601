@@ -183,7 +183,7 @@ void setup()
 void loop()
   Constantly checking if a bluetooth signal is received from slave
     - If a signal is received, set the destination and path and
-      send a signal back to master to display where it's going
+      send a signal back to master to display where it's going.
     - Make homeState false, so it will begin to move (stays still
       when it is true).
   When homeState is false:
@@ -208,12 +208,11 @@ void loop()
         if(blueToothSerial.available())   // Check if there's any data sent from the remote Bluetooth shield
         {
             recvChar = blueToothSerial.read();
-            if (homeState) {
+            if (homeState) {            // in each case, the currentPath is set and homeState is set to false 
               if(recvChar == '1'){
                 Serial.println("From Table 1 To Kitchen");
                 currentPath = 1;
                 currentDest = 0;
-                // then set currentpath and set homestate to false
                 homeState = false;
                 sendStatus();
               }
@@ -221,7 +220,6 @@ void loop()
                 Serial.println("From Table2 to Kitchen");
                 currentDest = 0;
                 currentPath = 2;
-                // then set currentpath and set homestate to false
                 homeState = false;
                 sendStatus();
               }
@@ -229,7 +227,6 @@ void loop()
                 Serial.println("To Table 1");
                 currentDest = 1;
                 currentPath = 3;
-                // then set currentpath and set homestate to false
                 homeState = false;
                 sendStatus();
               }
@@ -237,34 +234,24 @@ void loop()
                 Serial.println("To Table 2");
                 currentDest = 2;
                 currentPath = 4;
-                // then set currentpath and set homestate to false
                 homeState = false;
                 sendStatus();
               }
             }
           }
           sendStatus();
-        
-        
-//        if(Serial.available())            // Check if there's any data sent from the local serial terminal. You can add the other applications here.
-//        {
-//            recvChar  = Serial.read();
-//            if (recvChar == 'a' || recvChar == 'b' || recvChar == 'c' || recvChar == 'A' || recvChar == 'B' || recvChar == 'C') {
-//              Serial.println(recvChar);
-//              blueToothSerial.print(recvChar);
-//            }
-//        }
+      
         /*
          * THIS IS THE MOTOR FUNCTION
          */
         int lState = analogRead(leyePin);
         int rState = analogRead(reyePin);
-        servoLeft.attach(12);
+        servoLeft.attach(12);             // has to be attached each time as the halt() function detaches the servos
         servoRight.attach(13);
-        if(homeState == true){
+        if(homeState == true){            // halt if it's in "idle" state
           halt();
         }
-        else if(lState < 40 && rState < 40){
+        else if(lState < 40 && rState < 40){  // both photoresistors have detected black tape, thus it is an intersection
           intersection();
         }
         else if (lState < 40){
