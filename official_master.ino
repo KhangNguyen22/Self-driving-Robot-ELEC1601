@@ -181,7 +181,7 @@ void setup()
 void loop()
   Constantly checking if a bluetooth signal is received from slave
     - If a signal is received, set the destination and path and
-      send a signal back to master to display where it's going.
+      send a signal back to slave to display on LCD screen where it's going.
     - Make homeState false, so it will begin to move (stays still
       when it is true).
   When homeState is false:
@@ -289,21 +289,21 @@ void sendStatus() {
       blueToothSerial.println('a');    // following the destination on the LCD
     }
     else if (currentDest == 1) {
-      blueToothSerial.println('b');
+      blueToothSerial.println('b');     // Tell slave Arduino that master robot is IDLE at table 1
     }
     else if (currentDest == 2) {
-      blueToothSerial.println('c');
+      blueToothSerial.println('c');     // Tell slave Arduino that master robot is IDLE at table 2
     }
   }
   else {                                // If it's currently in "moving" state (moving to destination, homeState false),
     if (currentDest == 0) {             // it will send a signal which will make the slave display a "MOVING TO" message,
       blueToothSerial.println('A');     // following the destination on the LCD
-    }
+    } // A indicates "Moving to kitchen"
     else if (currentDest == 1) {
-      blueToothSerial.println('B');
+      blueToothSerial.println('B'); // B indicates "Moving to table 1"
     }
     else if (currentDest == 2) {
-      blueToothSerial.println('C');
+      blueToothSerial.println('C'); // C indicates "Moving to table 2"
     }
   }
   wait(); //wait() called to ensure this is not sent more than once.
