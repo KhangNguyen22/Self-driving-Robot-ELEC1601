@@ -60,3 +60,10 @@ void show(String lineOne, String lineTwo) {
   lcd.setCursor(0,1);
   lcd.print(lineTwo);
 }
+
+void wait() {
+  timeNow = millis();
+  while(millis() < timeNow + period) {
+    //do nothing i.e. do not send a signal if one was already sent for a second
+  }
+}
