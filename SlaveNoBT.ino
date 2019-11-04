@@ -31,16 +31,16 @@ void loop() {
     int buttonFour = analogRead(analogFour);
 
         if (isButtonPressed(buttonOne)) {
-          Serial.println("buttonOne Is Pressed");
+          show("1", "PRESSED")
         }
         else if (isButtonPressed(buttonTwo)) {
-          Serial.println(1);
+          show("2", "PRESSED")
         } 
         else if (isButtonPressed(buttonThree)) {
-          Serial.println(2);
+          show("3", "PRESSED")
         } 
         else if (isButtonPressed(buttonFour)) {
-          Serial.println(3);
+          show("4", "PRESSED")
         }
 }
 
