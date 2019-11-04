@@ -31,7 +31,7 @@ CIRCUIT:
     Uses pins 12-13.
     Left servo: 12
     Right servo: 13
-    Attack servos to allow Boe-Bot to move.
+    Attach servos to allow Boe-Bot to move.
       
 FUNCTIONS:
   void sendStatus()
