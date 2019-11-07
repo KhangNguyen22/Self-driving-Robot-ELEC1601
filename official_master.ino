@@ -308,6 +308,9 @@ void sendStatus() {
   }
   wait(); //wait() called to ensure this is not sent more than once.
 }
+
+// Below function was written by ELEC1601 staff
+
 void setupBlueToothConnection()
 {
     Serial.println("Setting up the local (master) Bluetooth module.");
@@ -336,6 +339,7 @@ void setupBlueToothConnection()
     Serial.println("Master is inquiring!");
 }
 
+// Below function was written by ELEC1601 staff
 
 void getSlaveAddress()
 {
@@ -391,7 +395,7 @@ void getSlaveAddress()
     }
 }
 
-
+// Below function was written by ELEC1601 staff
 void makeBlueToothConnection()
 {
     Serial.println("Initiating connection with slave.");
