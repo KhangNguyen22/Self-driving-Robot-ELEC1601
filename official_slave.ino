@@ -248,6 +248,11 @@ void wait() {
   }
 }
 
+/*
+	The below code sets up the bluetooth module. Written by the ELEC1601 staff team.
+*/
+
+
 void setupBlueToothConnection() {
   
     Serial.println("Setting up the local (slave) Bluetooth module.");
