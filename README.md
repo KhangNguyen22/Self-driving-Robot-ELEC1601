@@ -23,7 +23,7 @@ This was our final group project for an electrical subject called Introduction t
 
 
 ## Where:
-Made in the electrical labs at the University Of Sydney.
+Made in a electrical engineering laboratoy at the University Of Sydney.
 
 
 ## When:
