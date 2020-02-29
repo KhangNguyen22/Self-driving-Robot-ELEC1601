@@ -22,14 +22,16 @@ Programming Language used: Arduino programming language
 
 * Ability to think about programs in terms of hardware requirements
 
+* Modularisation of a complex task into workable tasks, to assign team members.
+
 
 ## Why:
 
-This was our final group project for an electrical subject called Introduction to computer systems (ELEC1601). 
+This was our final group project for an electrical subject called Introduction to computer systems (ELEC1601). We chose to do what is difficult because what is difficult is inspiring.
 
 
 ## Where:
-Made in a electrical engineering laboratoy at the University Of Sydney.
+Engineered at the University Of Sydney.
 
 
 ## When:
