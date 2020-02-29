@@ -38,4 +38,4 @@ Engineered at the University Of Sydney.
 
 Spent a total of 18 hours to finish this project.
 
-Note: This project ended up in the Hall of Fame for best projects of 2019.
+Note: This project ended up in the Hall of Fame for best projects of 2019. Credit goes to the other excellent team members: Stephen Dudley, Cameron Abbott and Joshua Blair.
