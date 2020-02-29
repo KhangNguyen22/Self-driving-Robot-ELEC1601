@@ -4,7 +4,7 @@
 
 ## Watch the video: https://drive.google.com/open?id=1lNT7PY4f7IOL4SH8x4v3kzOeeo285yah
 
-## What:
+## Intro
 
 
 This is a prototype of a restaurant food-delivering waiter. It is a robot, initially stationed in the kitchen, that responds to bluetooth signals and drives out, following the black tape as its path. It is able to decide, through hardcoded instructions, whether to turn left, right or go forward at each intersections. The image below shows the track.
@@ -15,6 +15,12 @@ In our test environment, we had 2 separate tables (see image above, though not i
 
 
 Programming Language used: Arduino programming language
+
+## Skills acquired
+
+* Ability to program in 8-bit AVR assembly language, demonstrating the use of redirection, indirection, register use, stack and parallel processing, to solve simple tasks.
+
+* Ability to think about programs in terms of hardware requirements
 
 
 ## Why:
